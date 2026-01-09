@@ -1,32 +1,163 @@
 <!doctype html>
-<html>
+<html lang="fr">
 
 <head>
   <meta charset="utf-8" />
-  <title>GLM Plan UI (test)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GLM Plan UI</title>
   <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    /* Fallback minimal si ton style.css n'a pas encore les classes */
+    .fileBtn {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      border: 1px solid #3333;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer
+    }
+
+    .fileBtn input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%
+    }
+
+    .modal.hidden {
+      display: none
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .35);
+      display: flex;
+      flex-direction: column;
+      z-index: 9999
+    }
+
+    .modalHeader {
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid #ddd;
+      gap: 12px;
+      flex-wrap: wrap
+    }
+
+    .modalActions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    #threeRoot {
+      flex: 1;
+      width: 100%;
+      height: calc(100vh - 70px); /* important */
+      min-height: 400px;
+      background: #111;
+    }
+
+  </style>
 </head>
 
 <body>
-  <div id="topbar">
-    <div id="bleBox">
-      <span id="bleLed" class="led led-red"></span>
-      <span id="bleText">GLM non connecté</span>
-      <span id="bleMeta"></span>
-    </div>
+  <!-- Top bar -->
+  <div id="topbar"
+    style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px;border-bottom:1px solid #ddd;">
+    <span id="bleLed" class="led led-red" style="display:inline-block;width:14px;height:14px;border-radius:50%;"></span>
+    <span id="bleText">GLM non connecté</span>
+    <span id="bleMeta" style="opacity:.75;"></span>
 
-    <div>Dernière mesure: <span id="lastMeasure">—</span> m</div>
+    <span style="margin-left:10px;">
+      Dernière mesure: <span id="lastMeasure">—</span> m
+    </span>
 
     <button id="btnUseLast">Créer segment avec dernière mesure</button>
-    <button id="btnExport">Exporter JPG</button>
 
-    <label>Échelle (px/m):
-      <input id="scale" type="range" min="50" max="800" value="200">
+    <!-- P1 additions -->
+    <input id="projectTitle" type="text" placeholder="Nom projet" style="width:220px" />
+
+    <label>
+      <input id="chkGrid" type="checkbox" checked />
+      Grille
+    </label>
+
+    <label>
+      <input id="chkSnap" type="checkbox" checked />
+      Snap
+    </label>
+
+    <label>
+      <input id="chkOrtho" type="checkbox" />
+      Ortho
+    </label>
+
+    <button id="btnUndo" title="Ctrl+Z">Undo</button>
+    <button id="btnRedo" title="Ctrl+Y">Redo</button>
+    <button id="btnDeleteMode">Supprimer</button>
+
+    <button id="btnSave">Sauver JSON</button>
+    <label class="fileBtn">
+      Charger JSON
+      <input id="fileLoad" type="file" accept="application/json" />
+    </label>
+
+    <button id="btnExportPng">Exporter PNG</button>
+    <button id="btnExport">Exporter JPG</button>
+    <button id="btnExportHD">Export HD (x4)</button>
+
+    <button id="btn3D">3D</button>
+
+    <label style="margin-left:10px;">
+      Échelle (px/m):
+      <input id="scale" type="range" min="50" max="600" step="10" value="200" />
     </label>
   </div>
 
+  <!-- Main canvas -->
+  <div style="padding:10px;">
+    <canvas id="c" width="1200" height="650" style="border:1px solid #ddd;max-width:100%;height:auto;"></canvas>
+    <div style="margin-top:8px;opacity:.75;">
+      Astuces: <kbd>Shift</kbd>+clic = ajouter un point · <kbd>Ctrl</kbd>+<kbd>Z</kbd> undo · <kbd>Esc</kbd> annuler un
+      mode
+    </div>
+  </div>
 
-  <canvas id="c" width="1200" height="800"></canvas>
+  <!-- 3D Modal -->
+  <div id="threeModal" class="modal hidden">
+    <div class="modalHeader">
+      <div>
+        <strong>Vue 3D</strong>
+        — hauteur = <span id="height3d">—</span> m
+        <input id="height3dInput" type="number" step="0.01" min="0.1" value="2.50" style="width:90px;margin-left:8px" />
+        <button id="btnHeightFromLast">Utiliser dernière mesure</button>
+      </div>
+      <div class="modalActions">
+        <button id="btnCamIso">Iso</button>
+        <button id="btnCamTop">Dessus</button>
+        <button id="btnCamFront">Face</button>
+        <button id="btn3DExport">Export 3D</button>
+        <button id="btn3DRefresh">Rafraîchir</button>
+        <button id="btn3DClose">Fermer</button>
+      </div>
+    </div>
+    <div id="threeRoot"></div>
+  </div>
+
+  <!-- Three.js -->
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- App -->
   <script src="/static/app.js"></script>
 </body>
 

@@ -57,13 +57,18 @@ class GLMStream:
 
         def cb(_sender, data: bytearray):
             payload = bytes(data)
+
+            # 1) brut
+            print(f"[GLM RX] len={len(payload)} hex={payload.hex(' ')}", flush=True)
+
+            # 2) décodage mètres (si trame mesure)
             value_m = parse_glm_measure(payload)
             if value_m is not None:
                 self.last_seen_ts = time.time()
+                print(f"[GLM MEASURE] {value_m:.4f} m", flush=True)
                 try:
                     on_measure(float(value_m))
                 except Exception as e:
-                    # Ne pas faire tomber la loop BLE sur une erreur UI
                     print(f"[GLM] on_measure callback error: {e}", flush=True)
 
         await client.start_notify(CHAR_UUID, cb)

@@ -95,6 +95,8 @@ async def ws_endpoint(ws: WebSocket):
 async def on_startup():
     global _ble_task, _status_task
     loop = asyncio.get_running_loop()
+    print("[APP] startup: launching BLE task", flush=True)
+
 
     async def status_tick():
         while True:
@@ -108,6 +110,17 @@ async def on_startup():
             loop
         )
         asyncio.run_coroutine_threadsafe(broadcast_ble_status(), loop)
+    
+    def _task_done(t: asyncio.Task):
+        try:
+            t.result()
+        except Exception as e:
+            print(f"[BLE TASK] crashed: {e}", flush=True)
+
+    _ble_task = asyncio.create_task(glm.run(on_measure))
+    _ble_task.add_done_callback(_task_done)
+
+    _status_task = asyncio.create_task(status_tick())
 
 def run():
     import uvicorn
