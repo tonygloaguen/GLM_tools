@@ -1,0 +1,13 @@
+[project]
+name = "glm50c-ble"
+version = "0.2.0"
+requires-python = ">=3.10"
+dependencies = [
+  "bleak>=0.21.1",
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.27",
+  "jinja2>=3.1"
+]
+
+[project.scripts]
+glm50c-ui = "planui.main:run"

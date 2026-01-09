@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+#topbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+canvas {
+    display: block;
+}
+
+#bleBox { display:flex; align-items:center; gap:8px; }
+#bleMeta { color:#666; font-size:12px; margin-left:6px; }
+
+.led {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  display: inline-block;
+  border: 1px solid #3333;
+}
+
+.led-red { background: #d22; }
+.led-green { background: #2a2; }

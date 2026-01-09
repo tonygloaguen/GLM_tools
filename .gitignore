@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+*.egg-info/
+dist/
+build/
+.coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Logs / exports
+logs/
+*.log
+*.csv
+*.jpg
+*.png
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/*.log
+
+# Node (si jamais)
+node_modules/

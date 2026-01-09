@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>GLM Plan UI (test)</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+  <div id="topbar">
+    <div id="bleBox">
+      <span id="bleLed" class="led led-red"></span>
+      <span id="bleText">GLM non connecté</span>
+      <span id="bleMeta"></span>
+    </div>
+
+    <div>Dernière mesure: <span id="lastMeasure">—</span> m</div>
+
+    <button id="btnUseLast">Créer segment avec dernière mesure</button>
+    <button id="btnExport">Exporter JPG</button>
+
+    <label>Échelle (px/m):
+      <input id="scale" type="range" min="50" max="800" value="200">
+    </label>
+  </div>
+
+
+  <canvas id="c" width="1200" height="800"></canvas>
+  <script src="/static/app.js"></script>
+</body>
+
+</html>
