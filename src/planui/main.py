@@ -108,3 +108,10 @@ async def on_startup():
             loop
         )
         asyncio.run_coroutine_threadsafe(broadcast_ble_status(), loop)
+
+def run():
+    import uvicorn
+    uvicorn.run("planui.main:app", host="127.0.0.1", port=8000, reload=True)
+
+if __name__ == "__main__":
+    run()
